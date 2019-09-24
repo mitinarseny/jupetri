@@ -2,9 +2,9 @@
   <a href="https://github.com/mitinarseny/jupetri">
     <img src=".assets/logo.png" alt="logo" width="20%" />
   </a>
-  <h1 align="center">Placeholder</h1>
+  <h1 align="center">Template for reusable <a href="https://jupyter.org">Jupyter</a> notebooks</h1>
   <p align="center">
-    Placeholder
+    Compatible with following services:
   </p>
   <p align="center">
     <a href="https://nbviewer.jupyter.org/github/mitinarseny/jupetri/tree/master/work/">
