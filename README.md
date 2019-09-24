@@ -21,17 +21,36 @@
 
 ## Usage
 ### Run
+To build, run image and mount volume to it, run:
 ```bash
 docker run --rm \
+  --name jupyter_example
   -v "${PWD}/work":/home/jovyan/work \
   -p 8888:8888 \
   mitinarseny/jupetri
 ```
-### Build
+If you need to install additional `pip` dependencies, run:
 ```bash
-docker build -t mitinarseny/jupetri:latest .
+docker exec jupyter_example pip install <package>
+```
+To add all dependencies to `requirements.txt`, run:
+```bash
+docker exec jupyter_example pip freeze > requirements.txt
+```
+### Build
+You can optionally build your image and push it to docker registry (e.g. [DockerHub](https://hub.docker.com)).
+#### Configure environment
+
+```bash
+docker exec
+```
+#### Build image
+
+```bash
+docker build -t <user>/<repo>:<tag> .
 ```
 ### Push
+Firstly, create a repository, then `docker login` and finally push:
 ```bash
-docker push mitinarseny/jupetri:latest
+docker push <user>/<repo>:<tag>
 ```
