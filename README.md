@@ -24,7 +24,7 @@
 To build, run image and mount volume to it, run:
 ```bash
 docker run --rm \
-  --name jupyter_example
+  --name jupyter_example \
   -v "${PWD}/work":/home/jovyan/work \
   -p 8888:8888 \
   mitinarseny/jupetri
