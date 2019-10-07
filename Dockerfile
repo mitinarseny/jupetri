@@ -44,13 +44,14 @@ RUN jupyter labextension install --clean --no-build \
   @jupyterlab/toc \
   @jupyterlab/latex \
   @krassowski/jupyterlab_go_to_definition \
-  @ryantam626/jupyterlab_code_formatter
+  @ryantam626/jupyterlab_code_formatter \
+  > /dev/null
 
 COPY --chown=${JUPYTER_USER}:${JUPYTER_GROUP} jupyter/ /home/${JUPYTER_USER}/.jupyter/
 
-RUN jupyter lab build
+RUN jupyter lab build > /dev/null
 
 WORKDIR /home/${JUPYTER_USER}
 
 ENTRYPOINT ["jupyter"]
-CMD ["lab", "--ip", "0.0.0.0", "--port", "8888", "--no-browser"]
+CMD ["lab", "--ip", "127.0.0.1", "--port", "8888", "--no-browser"]
