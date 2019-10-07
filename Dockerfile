@@ -16,6 +16,8 @@ RUN apt-get update \
     nodejs \
   && rm -rf /var/lib/apt/lists/*
 
+RUN pip3 install --upgrade pip
+
 RUN addgroup --gid "${JUPYTER_GID}" "${JUPYTER_GROUP}" \
   && adduser \
   --disabled-password \
@@ -23,21 +25,16 @@ RUN addgroup --gid "${JUPYTER_GID}" "${JUPYTER_GROUP}" \
   --uid "${JUPYTER_UID}" \
   "${JUPYTER_USER}"
 
-RUN pip3 install --upgrade \
-  pip \
-  virtualenv
-
-ARG VIRTUAL_ENV=/opt/venv
-RUN mkdir -p ${VIRTUAL_ENV} \
-  && chown -R ${JUPYTER_UID} ${VIRTUAL_ENV}
-
 USER ${JUPYTER_USER}
-RUN python3 -m virtualenv --python=python3 "${VIRTUAL_ENV}"
-ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
+ENV PYTHONUSERBASE="/home/${JUPYTER_USER}/.local/"
+ENV PATH="${PYTHONUSERBASE}/bin:${PATH}"
 
 COPY --chown=${JUPYTER_USER}:${JUPYTER_GROUP} requirements.txt /tmp/
-RUN pip3 install --no-cache-dir -r /tmp/requirements.txt \
+RUN pip3 install --user --no-cache-dir -r /tmp/requirements.txt \
   && rm /tmp/requirements.txt
+
+ENV JUPYTERLAB_DIR="${PYTHONUSERBASE}/share/jupyter/lab"
+ENV JUPYTERLAB_SETTINGS_DIR="/home/${JUPYTER_USER}/.jupyter/lab/user-settings/"
 
 RUN jupyter labextension install --clean --no-build \
   @kenshohara/theme-nord-extension \
@@ -47,11 +44,17 @@ RUN jupyter labextension install --clean --no-build \
   @ryantam626/jupyterlab_code_formatter \
   > /dev/null
 
-COPY --chown=${JUPYTER_USER}:${JUPYTER_GROUP} jupyter/ /home/${JUPYTER_USER}/.jupyter/
+RUN mkdir -p "${JUPYTERLAB_SETTINGS_DIR}"
+COPY --chown=${JUPYTER_USER}:${JUPYTER_GROUP} settings/ ${JUPYTERLAB_SETTINGS_DIR}
 
 RUN jupyter lab build > /dev/null
 
-WORKDIR /home/${JUPYTER_USER}
+ENV JUPYTERLAB_WORK_DIR="/home/${JUPYTER_USER}/work"
+RUN mkdir -p "${JUPYTERLAB_WORK_DIR}"
+
+WORKDIR ${JUPYTERLAB_WORK_DIR}
 
 ENTRYPOINT ["jupyter"]
-CMD ["lab", "--ip", "127.0.0.1", "--port", "8888", "--no-browser"]
+CMD ["lab", "--ip=0.0.0.0", "--port=8888", "--no-browser"]
+
+EXPOSE 8888
