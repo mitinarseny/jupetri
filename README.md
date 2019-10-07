@@ -49,9 +49,9 @@ docker-compose up --build
 ```
 ### Deploy
 Build image:
-``bash
+```bash
 docker build -t <user>/<repo>:<tag> .
-``
+```
 You can optionally build your image and push it to docker registry (e.g. [DockerHub](https://hub.docker.com)).
 Firstly, create a repository, then `docker login` and push finally:
 ```bash
