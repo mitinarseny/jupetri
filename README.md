@@ -2,7 +2,7 @@
   <a href="https://github.com/mitinarseny/jupetri">
     <img src=".assets/logo.png" alt="logo" width="20%" />
   </a>
-  <h1 align="center">Complete <a href="http://docker.com/">Docker</a> image for <a href="https://jupyter.org">Jupyter</a> Lab</h1>
+  <h1 align="center">Complete <a href="http://docker.com/">Docker</a> image for <a href="https://jupyter.org">Jupyter Lab</a></h1>
   <p align="center">
     <a href="https://hub.docker.com/r/mitinarseny/jupetri/builds">
       <img alt="Docker Build" src="https://img.shields.io/docker/cloud/build/mitinarseny/jupetri?logo=docker&style=flat-square">
