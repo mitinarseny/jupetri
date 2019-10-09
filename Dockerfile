@@ -42,7 +42,7 @@ RUN pip3 install --upgrade pip \
     jupyterlab-git==0.8.1 \
     jupyterlab-latex==1.0.0 \
     jupyterlab-server==1.0.6 \
-    nbconvert==5.6.0 \\
+    nbconvert==5.6.0 \
   && jupyter labextension install --clean --no-build \
     @kenshohara/theme-nord-extension \
     @jupyterlab/toc \

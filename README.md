@@ -13,7 +13,8 @@
 ## About
 This docker image includes [Jupyter Lab](https://github.com/jupyterlab/jupyterlab) with following extensions and features:
 * [Nord Theme](https://www.nordtheme.com): [@kenshohara/theme-nord-extension](https://github.com/kenshohara/theme-nord-extension)
-* [Latex](https://www.latex-project.org) support: [@jupyterlab/latex](https://github.com/jupyterlab/jupyterlab-latex)
+* [Latex](https://www.latex-project.org) live edit support: [@jupyterlab/latex](https://github.com/jupyterlab/jupyterlab-latex)
+* [Unicode template](jupyter/templates/latex/unicode.tplx) for exporting notebooks to `.tex` (and `.pdf` correspondingly)
  
 ## Usage
 ### List Dependencies

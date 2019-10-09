@@ -23,3 +23,6 @@
 ((( super() ))) % load all other packages
 ((* endblock packages *))
 
+((* block markdowncell *))
+
+((* endblock markdowncell *))

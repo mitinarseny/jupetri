@@ -12,13 +12,14 @@ LABEL maintainer="Arseny Mitin <mitinarseny@gmail.com>"
 RUN apt-get update \
   && apt-get install -y \
     curl \
-  && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
-  && apt-get install -y \
+    git \
     texlive-xetex \
     texlive-fonts-recommended \
     texlive-generic-recommended \
     texlive-lang-cyrillic \
     pandoc \
+  && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
+  && apt-get install -y \
     nodejs \
   && rm -rf /var/lib/apt/lists/*
 
@@ -46,17 +47,22 @@ RUN pip3 install --no-cache-dir \
   jupyterlab-server==1.0.6 \
   nbconvert==5.6.0
 
-RUN jupyter labextension install --clean --no-build \
+RUN jupyter labextension install --debug --clean --no-build \
   @kenshohara/theme-nord-extension \
   @jupyterlab/toc \
   @jupyterlab/latex \
   @krassowski/jupyterlab_go_to_definition \
   @ryantam626/jupyterlab_code_formatter \
 #  @jupyterlab/mathjax3-extension \
-  @jupyterlab/katex-extension \
-  @jupyterlab/shortcutui
+#  @jupyterlab/katex-extension \
+  @jupyterlab/shortcutui \
+  @jupyter-widgets/jupyterlab-manager \
+#  plotlywidget \
+#  jupyterlab-plotly \
+#  jupyterlab-chart-editor \
+  > /dev/null
 
-RUN jupyter lab build
+RUN jupyter lab build --debug > /dev/null
 
 FROM builder AS configer
 
