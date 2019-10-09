@@ -38,7 +38,7 @@ services:
   lab:
     build: .
     volumes:
-      - ./:/home/jupetri/
+      - ./:/home/jupetri/work/
     ports:
       - "8888:8888"
 ```

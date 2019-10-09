@@ -9,11 +9,6 @@ FROM $BASE_CONTAINER as builder
 
 LABEL maintainer="Arseny Mitin <mitinarseny@gmail.com>"
 
-ARG JUPYTER_USER
-ARG JUPYTER_UID
-ARG JUPYTER_GROUP
-ARG JUPYTER_GID
-
 RUN apt-get update \
   && apt-get install -y \
     curl \
@@ -25,33 +20,43 @@ RUN apt-get update \
     texlive-lang-cyrillic \
     pandoc \
     nodejs \
-  && rm -rf /var/lib/apt/lists/* \
-  && chmod -R +777 /usr/local/ \
-  && addgroup --gid "${JUPYTER_GID}" "${JUPYTER_GROUP}" \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN chmod -R +777 /usr/local/
+
+ARG JUPYTER_USER
+ARG JUPYTER_UID
+ARG JUPYTER_GROUP
+ARG JUPYTER_GID
+RUN addgroup --gid "${JUPYTER_GID}" "${JUPYTER_GROUP}" \
   && adduser \
-    --disabled-password \
-    --gecos "" \
-    --uid "${JUPYTER_UID}" \
-    "${JUPYTER_USER}"
+  --disabled-password \
+  --gecos "" \
+  --uid "${JUPYTER_UID}" \
+  "${JUPYTER_USER}"
 
 USER ${JUPYTER_USER}
 
-RUN pip3 install --upgrade pip \
-  && pip3 install --no-cache-dir \
-    jupyterlab==1.1.4 \
-    jupyterlab-git==0.8.1 \
-    jupyterlab-latex==1.0.0 \
-    jupyterlab-server==1.0.6 \
-    nbconvert==5.6.0 \\
-  && jupyter labextension install --clean --no-build \
-    @kenshohara/theme-nord-extension \
-    @jupyterlab/toc \
-    @jupyterlab/latex \
-    @krassowski/jupyterlab_go_to_definition \
-    @ryantam626/jupyterlab_code_formatter \
-    @jupyterlab/katex-extension \
-    @jupyterlab/shortcutui \
-  && jupyter lab build
+RUN pip3 install --upgrade pip
+
+RUN pip3 install --no-cache-dir \
+  jupyterlab==1.1.4 \
+  jupyterlab-git==0.8.1 \
+  jupyterlab-latex==1.0.0 \
+  jupyterlab-server==1.0.6 \
+  nbconvert==5.6.0
+
+RUN jupyter labextension install --clean --no-build \
+  @kenshohara/theme-nord-extension \
+  @jupyterlab/toc \
+  @jupyterlab/latex \
+  @krassowski/jupyterlab_go_to_definition \
+  @ryantam626/jupyterlab_code_formatter \
+#  @jupyterlab/mathjax3-extension \
+  @jupyterlab/katex-extension \
+  @jupyterlab/shortcutui
+
+RUN jupyter lab build
 
 FROM builder AS configer
 

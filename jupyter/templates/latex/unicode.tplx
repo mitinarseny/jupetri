@@ -1,0 +1,25 @@
+% Default to the notebook output style
+((* set cell_style = 'style_jupyter.tplx' *))
+% Inherit from the specified cell style.
+((* extends cell_style *))
+
+((* block docclass *))
+\documentclass[11pt]{article}
+((* endblock docclass *))
+
+% Author and Title from metadata
+((* block maketitle *))
+  \author{((( nb.metadata.get('latex', {}).get('author', 'No author provided in latex metadata'))))}
+  \title{((( nb.metadata.get('latex', {}).get('title', resources.metadata.name) )))}
+  \date{\today}
+  \maketitle
+((* endblock maketitle *))
+
+((* block packages *))
+% For cyrillic symbols
+\usepackage[utf8]{inputenc}
+\usepackage[T1,T2A]{fontenc}
+\usepackage[english,main=russian]{babel}
+((( super() ))) % load all other packages
+((* endblock packages *))
+
