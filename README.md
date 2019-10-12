@@ -34,7 +34,7 @@ RUN conda install --yes --freeze-installed \
   # and other packages you need
 ```
 
-Then, in your project root directory create `docker-compose.yaml` with following structure:
+Then, in your project root directory create [`docker-compose.yaml`](https://docs.docker.com/compose/compose-file/) with following structure:
 
 ```yaml
 version: '3.7'
