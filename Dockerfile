@@ -1,74 +1,52 @@
 ARG BASE_CONTAINER=python:3.7.4-slim-buster
-
-ARG JUPYTER_USER="jupetri"
-ARG JUPYTER_UID="12345"
-ARG JUPYTER_GROUP="petri"
-ARG JUPYTER_GID="54321"
-
 FROM $BASE_CONTAINER as builder
 
 LABEL maintainer="Arseny Mitin <mitinarseny@gmail.com>"
 
-ARG JUPYTER_USER
-ARG JUPYTER_UID
-ARG JUPYTER_GROUP
-ARG JUPYTER_GID
+ENV DEBIAN_FRONTEND noninteractive
+ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE NO
 
-RUN apt-get update \
-  && apt-get install -y \
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+ENV PATH /opt/conda/bin:${PATH}
+
+RUN apt-get update --fix-missing \
+    && apt-get install --yes --no-install-recommends \
     curl \
-  && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
-  && apt-get install -y \
-    texlive-xetex \
-    texlive-fonts-recommended \
-    texlive-generic-recommended \
-    texlive-lang-cyrillic \
-    pandoc \
-    nodejs \
-  && rm -rf /var/lib/apt/lists/* \
-  && chmod -R +777 /usr/local/ \
-  && addgroup --gid "${JUPYTER_GID}" "${JUPYTER_GROUP}" \
-  && adduser \
-    --disabled-password \
-    --gecos "" \
-    --uid "${JUPYTER_UID}" \
-    "${JUPYTER_USER}"
+    gnupg2
 
-USER ${JUPYTER_USER}
+RUN curl -sL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && apt-get install --yes --no-install-recommends \
+    gcc \
+    python3-dev \
+    xvfb \
+    libgtk2.0-0 \
+    libgconf-2-4 \
+    chromium \
+    xauth \
+    && apt-get clean --yes \
+    && apt-get autoclean --yes \
+    && apt-get autoremove --yes \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install --upgrade pip \
-  && pip3 install --no-cache-dir \
-    jupyterlab==1.1.4 \
-    jupyterlab-git==0.8.1 \
-    jupyterlab-latex==1.0.0 \
-    jupyterlab-server==1.0.6 \
-    nbconvert==5.6.0 \
-  && jupyter labextension install --clean --no-build \
-    @kenshohara/theme-nord-extension \
-    @jupyterlab/toc \
-    @jupyterlab/latex \
-    @krassowski/jupyterlab_go_to_definition \
-    @ryantam626/jupyterlab_code_formatter \
-    @jupyterlab/katex-extension \
-    @jupyterlab/shortcutui \
-  && jupyter lab build
+RUN curl -sL https://repo.anaconda.com/miniconda/Miniconda3-4.7.10-Linux-x86_64.sh -o /tmp/miniconda.sh \
+    && bash /tmp/miniconda.sh -b -p /opt/conda \
+    && rm /tmp/miniconda.sh \
+    && ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh \
+    && echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc \
+    && echo "conda activate base" >> ~/.bashrc
 
-FROM builder AS configer
+RUN conda install --yes --freeze-installed \
+    --channel plotly \
+    nomkl \
+    jupyter \
+    plotly \
+    plotly-orca \
+    psutil \
+    requests \
+    && conda clean --all --force-pkgs-dirs --yes
 
-ARG JUPYTER_USER
-ARG JUPYTER_GROUP
-
-WORKDIR /home/${JUPYTER_USER}
-
-RUN mkdir -p "/home/${JUPYTER_USER}/.jupyter/"
-COPY --chown=${JUPYTER_USER}:${JUPYTER_GROUP} jupyter/ /home/${JUPYTER_USER}/.jupyter/
-ARG JUPYTERLAB_WORK_DIR="/home/${JUPYTER_USER}/work"
-
-RUN mkdir -p "${JUPYTERLAB_WORK_DIR}"
-ENV JUPYTERLAB_SETTINGS_DIR="/home/${JUPYTER_USER}/.jupyter/lab/user-settings/"
+WORKDIR /data
 
 ENTRYPOINT ["jupyter"]
-CMD ["lab", "--ip=0.0.0.0", "--port=8888", "--no-browser"]
+CMD ["notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
 EXPOSE 8888
-
-FROM configer
