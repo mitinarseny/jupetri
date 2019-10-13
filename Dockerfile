@@ -53,6 +53,5 @@ RUN jt -t oceans16 -T -N
 
 WORKDIR /data
 
-ENTRYPOINT ["jupyter"]
-CMD ["notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
 EXPOSE 8888
