@@ -20,6 +20,21 @@ This docker image includes:
 
 ## Usage
 
+### List dependencies
+
+You will need to list all your python dependencies in `requirements.txt`.
+To list all python modules via `pip`:
+
+```bash
+pip freeze > requirements.txt
+```
+
+Or with `conda`:
+
+```bash
+conda list -e > requirements.txt
+```
+
 ### Dockerize
 
 Create a [`Dockerfile`](https://docs.docker.com/engine/reference/builder/)
@@ -28,10 +43,9 @@ in your project root directory with following structure:
 ```dockerfile
 FROM mitinarseny/jupetri
 
-RUN conda install --yes --freeze-installed \
-  numpy \
-  scipy \
-  # and other packages you need
+COPY requirements.txt .
+
+RUN conda install --file requirements.txt --quiet --yes
 ```
 
 Then, in your project root directory create [`docker-compose.yaml`](https://docs.docker.com/compose/compose-file/) with following structure:
