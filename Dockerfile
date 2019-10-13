@@ -35,15 +35,21 @@ RUN curl -sL https://repo.anaconda.com/miniconda/Miniconda3-4.7.10-Linux-x86_64.
     && echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc \
     && echo "conda activate base" >> ~/.bashrc
 
-RUN conda install --yes --freeze-installed \
+RUN conda update --channel defaults --quiet --yes conda \
+    && conda install --freeze-installed --quiet --yes \
+    --channel conda-forge \
     --channel plotly \
     nomkl \
     jupyter \
+    jupyterthemes \
     plotly \
     plotly-orca \
     psutil \
     requests \
     && conda clean --all --force-pkgs-dirs --yes
+
+# configure
+RUN jt -t oceans16 -T -N
 
 WORKDIR /data
 
