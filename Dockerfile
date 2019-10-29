@@ -41,15 +41,11 @@ RUN conda update --channel defaults --quiet --yes conda \
     --channel plotly \
     nomkl \
     jupyter \
-    jupyterthemes \
     plotly \
     plotly-orca \
     psutil \
     requests \
     && conda clean --all --force-pkgs-dirs --yes
-
-# configure
-RUN jt -t oceans16 -T -N
 
 WORKDIR /data
 
