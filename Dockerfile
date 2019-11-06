@@ -11,6 +11,8 @@ RUN apt-get update \
   && apt-get install --yes --no-install-recommends \
     gcc \
     g++ \
+    libfreetype6-dev \
+    pkg-config \
   && apt-get clean --yes \
   && apt-get autoclean --yes \
   && apt-get autoremove --yes \
