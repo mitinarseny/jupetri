@@ -14,9 +14,9 @@
 
 This docker image includes:
 
-* [`python`](https://www.python.org) version `3.7.4`
-* [`conda`](https://conda.io/) (`miniconda3` version `4.7.10`)
-* [`plotly`](https://plot.ly/python/) module with [`orca`](https://github.com/plotly/orca) configured
+* [`python`](https://www.python.org) version `3.8.0`
+* [`plotly`](https://plot.ly/python/)
+* [`matplotlib`](https://matplotlib.org/index.html)
 
 ## Usage
 
@@ -45,7 +45,7 @@ FROM mitinarseny/jupetri
 
 COPY requirements.txt .
 
-RUN conda install --file requirements.txt --quiet --yes
+RUN pip install -r requirements.txt
 ```
 
 Then, in your project root directory create [`docker-compose.yaml`](https://docs.docker.com/compose/compose-file/) with following structure:
